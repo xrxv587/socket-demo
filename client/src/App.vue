@@ -18,10 +18,10 @@ const send = () => {
 	socket!.emit("send", msg.value);
 }
 const sendText = () => {
-	axios.post("/api/say", { text: text.value });
+	axios.post("/say", { text: text.value });
 }
 onMounted(() => {
-	axios("/api");
+	// TODO
 	socket = io("http://localhost:9999", {
 		extraHeaders: {
 			"auth": "aaaaaa"
