@@ -3,15 +3,31 @@ import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import bodyParser from "body-parser";
+import session from "express-session";
+
 import router from "./routes";
 
 const app = express();
 const httpServer = createServer(app);
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json);
+app.set("trust proxy", 1);
+app.use(session({
+	secret: "chatroom",
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		secure: false
+	}
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/api", router);
+app.use("/api", (req, res, next) => {
+	if (req.url === "/init") {
+		console.log("yes!! initialing");
+	}
+	next();
+}, router);
 
 let socketList: any = {};
 

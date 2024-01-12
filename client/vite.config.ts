@@ -9,5 +9,5 @@ export default defineConfig({
 		"/api": "http://localhost:9999",
 		// "/socket.io": "ws://localhost:9999"
 	}
-  }
+  },
 })

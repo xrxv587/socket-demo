@@ -1,37 +1,43 @@
 <template>
-  homepage
-  <input type="text" v-model="msg">
-  <button @click="send">send</button><br />
-  <input type="text" v-model="text" />
-  <button @click="sendText">添加记录到消息通道</button>
+	<div class="app-container">
+  		<Chat />
+		<InputArea />
+	</div>
 </template>
+<style lang="less" scoped>
+.app-container {
+	box-shadow: rgba(0,0,0,.4) 0 0 20px;
+	background-color: #f5f7fa;
+	width: 750px;
+	height: 650px;
+	overflow-x: auto;
+}
+</style>
 <script setup lang="ts">
-import axios from "axios";
-import { onMounted, ref } from 'vue';
+import InputArea from "./views/InputArea.vue";
+import Chat from "./views/Chat.vue";
+import { onMounted } from 'vue';
 import { io } from "socket.io-client";
-let socket = null;
+import request from "./util/request";
+import { useSocketStore } from "./store/socket";
 
-const msg = ref("");
-const text = ref("");
-const send = () => {
-	console.log(msg.value);
-	socket!.emit("send", msg.value);
-}
-const sendText = () => {
-	axios.post("/say", { text: text.value });
-}
+const store = useSocketStore();
+
 onMounted(() => {
-	// TODO
-	socket = io("http://localhost:9999", {
+	request.post("/init").then(res => console.log(res));
+	request.get("/getUser").then(res => console.log(res));
+
+	const socket = io("ws://localhost:9999", {
 		extraHeaders: {
 			"auth": "aaaaaa"
 		}
 	});
+	store.setInstance(socket);
 	socket.on("hello", (arg) => {
 		console.log(arg); // world
 	});
-	socket.on("message", (mess) => {
-		console.log(mess); 
-	});
+	// socket.on("message", (mess) => {
+	// 	console.log(mess); 
+	// });
 })
 </script>

@@ -1,0 +1,36 @@
+.chat-container {
+	width: 100%;
+	height: calc(100% - 50px);
+	padding: 10px;
+	.send, .receive {
+		.name {
+			color: #000;
+			padding-left: 10px;
+			margin-bottom: 5px;
+		}
+		.msg-container .inner {
+			max-width: 500px;
+			color: #fff;
+			padding: 10px 20px;
+			background-color: #525dee;
+			border-radius: 10px;
+			border-top-left-radius: 0;
+			display: inline-block;
+		}
+	}
+	.send {
+		.name {
+			text-align: right;
+			padding-left: 0;
+			padding-right: 10px;
+		}
+		.msg-container {
+			text-align: right;
+			.inner {
+				background-color: #5ef36f;
+				border-radius: 10px;
+				border-top-right-radius: 0;
+			}
+		}
+	}
+}
