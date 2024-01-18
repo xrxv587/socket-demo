@@ -32,7 +32,9 @@ const io = new Server(httpServer, {
 // let socketIns: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 io.on("connection", (socket) => {
 	socket.emit("hello", "world");
-	socket.on("send", message);
+	socket.on("message", (mess) => {
+		message(mess, socket);
+	});
 })
 io.on("connect_error", errorHandler);
 // io.on("send", (mess) => {

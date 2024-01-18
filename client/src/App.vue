@@ -35,7 +35,7 @@ onMounted(async () => {
 	socket.on("hello", (arg) => {
 		console.log(arg); // world
 	});
-	socket.emit("send", "heyhey")
+	socket.emit("message", "heyhey");
 	// socket.on("message", (mess) => {
 	// 	console.log(mess); 
 	// });

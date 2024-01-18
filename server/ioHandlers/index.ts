@@ -7,6 +7,7 @@ export const errorHandler = (err: any) => {
 	console.error("socket connect error:", err);
 }
 
-export const message = (message: any) => {
+export const message = (message: any, socket: SocketType) => {
 	console.log("收到消息：", message);
+	socket.send(message);
 };
