@@ -18,15 +18,15 @@
 	@import url(./chat.less);
 </style>
 <script lang="ts" setup>
-	import { watch } from 'vue';
-	import { useSocketStore } from '../store/socket';
-	import { storeToRefs } from 'pinia';
+	// import { watch } from 'vue';
+	// import { useSocketStore } from '../store/socket';
+	// import { storeToRefs } from 'pinia';
 	// pinia DEMO
-	const socketStore = useSocketStore();
+	// const socketStore = useSocketStore();
 
-	const { instance } = storeToRefs(socketStore);
-	watch(instance, (val) => {
-		console.log(val);
-	})
+	// const { instance } = storeToRefs(socketStore);
+	// watch(instance, (val) => {
+	// 	console.log(val);
+	// })
 	// pinia DEMO end
 </script>

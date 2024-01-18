@@ -1,11 +1,11 @@
 import express from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import bodyParser from "body-parser";
 import session from "express-session";
 
 import router from "./routes";
+import { errorHandler, message } from "./ioHandlers";
 
 const app = express();
 const httpServer = createServer(app);
@@ -22,33 +22,22 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/api", (req, res, next) => {
-	if (req.url === "/init") {
-		console.log("yes!! initialing");
-	}
-	next();
-}, router);
-
-let socketList: any = {};
-
-
 const io = new Server(httpServer, {
 	cors: {
-		origin: "*"
+		origin: "*",
+		credentials: true,
 	}
 });
 
-// 整个应用只开启一个socket，所有人都在里面
-let socketIns: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-
+// let socketIns: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 io.on("connection", (socket) => {
-  socketIns = socket;
-  socket.emit("hello", "world");
-  socket.emit("message", "socket");
-  socket.on("send", (mess: any) => {
-	  console.log(mess);
-  });
-});
-// io.on("message", ())
+	socket.emit("hello", "world");
+	socket.on("send", message);
+})
+io.on("connect_error", errorHandler);
+// io.on("send", (mess) => {
+// 	console.log("111", mess);
+// });
+app.use("/api", router);
 
 httpServer.listen(9999);

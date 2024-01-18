@@ -4,18 +4,17 @@
 		<InputArea />
 	</div>
 </template>
-<style lang="less" scoped>
+<style lang="less">
 .app-container {
-	box-shadow: rgba(0,0,0,.4) 0 0 20px;
-	background-color: #f5f7fa;
-	width: 750px;
-	height: 650px;
-	overflow-x: auto;
+	width: 700px;
+	height: 700px;
+	background-color: #eee;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .5);
 }
 </style>
 <script setup lang="ts">
-import InputArea from "./views/InputArea.vue";
 import Chat from "./views/Chat.vue";
+import InputArea from "./views/InputArea.vue";
 import { onMounted } from 'vue';
 import { io } from "socket.io-client";
 import request from "./util/request";
@@ -23,9 +22,9 @@ import { useSocketStore } from "./store/socket";
 
 const store = useSocketStore();
 
-onMounted(() => {
-	request.post("/init").then(res => console.log(res));
-	request.get("/getUser").then(res => console.log(res));
+onMounted(async () => {
+	await request.post("/init").then(res => console.log(res));
+	await request.get("/getUser").then(res => console.log(res));
 
 	const socket = io("ws://localhost:9999", {
 		extraHeaders: {
@@ -36,6 +35,7 @@ onMounted(() => {
 	socket.on("hello", (arg) => {
 		console.log(arg); // world
 	});
+	socket.emit("send", "heyhey")
 	// socket.on("message", (mess) => {
 	// 	console.log(mess); 
 	// });
