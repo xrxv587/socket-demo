@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import session from "express-session";
 
 import router from "./routes";
-import { errorHandler, message } from "./ioHandlers";
+import { errorHandler } from "./ioHandlers";
 
 const app = express();
 const httpServer = createServer(app);
@@ -28,18 +28,18 @@ const io = new Server(httpServer, {
 		credentials: true,
 	}
 });
-
-// let socketIns: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+const ROOM = "ROOM";
 io.on("connection", (socket) => {
-	socket.emit("hello", "world");
-	socket.on("message", (mess) => {
-		message(mess, socket);
+	socket.join(ROOM);
+	socket.on("message", (mess: any) => {
+		console.log("receive message=>", mess);
+		socket.to(ROOM).emit("message", mess);
+	});
+	socket.on("new_user", (mess: any) => {
+		socket.to(ROOM).emit("notice", mess);
 	});
 })
 io.on("connect_error", errorHandler);
-// io.on("send", (mess) => {
-// 	console.log("111", mess);
-// });
 app.use("/api", router);
 
 httpServer.listen(9999);

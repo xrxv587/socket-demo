@@ -18,7 +18,8 @@ import InputArea from "./views/InputArea.vue";
 import { onMounted } from 'vue';
 import { io } from "socket.io-client";
 import request from "./util/request";
-import { useSocketStore } from "./store/socket";
+import { MsgType, useSocketStore } from "./store/socket";
+import { SocketMessage } from "./interfaces";
 
 const store = useSocketStore();
 
@@ -32,12 +33,22 @@ onMounted(async () => {
 		}
 	});
 	store.setInstance(socket);
-	socket.on("hello", (arg) => {
-		console.log(arg); // world
+	
+	socket.on("message", (mess: SocketMessage) => {
+		console.log("新消息：", mess); 
+		store.receiveMessage(mess);
 	});
-	socket.emit("message", "heyhey");
-	// socket.on("message", (mess) => {
-	// 	console.log(mess); 
-	// });
+	socket.on("connect", () => {
+		store.setSelf(socket.id);
+		const content: SocketMessage = {
+			sendId: socket.id,
+			type: MsgType.NOTICE,
+			content: "-新用户进入房间-"
+		}
+		socket.emit("new_user", content);
+	});
+	socket.on("notice", (mess: SocketMessage) => {
+		store.receiveMessage(mess);
+	})
 })
 </script>
